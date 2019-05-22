@@ -13,4 +13,6 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('admin.home');
 	
 	//$router->post('auth/login', 'AuthController@login');	//登入api
+	
+	$router->resource('operation', LogsController::class);
 });
