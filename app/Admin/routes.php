@@ -15,4 +15,5 @@ Route::group([
 	//$router->post('auth/login', 'AuthController@login');	//登入api
 	
 	$router->resource('operation', LogsController::class);
+	$router->resource('member', MemberController::class);
 });
