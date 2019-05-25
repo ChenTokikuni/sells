@@ -101,6 +101,13 @@ class MemberController extends Controller
 				
 				$filter->like('name', '姓名')->select($this->getName());
 			
+				$filter->between('registration_date', '注册日期')->datetime();
+				
+				$filter->between('last_login', '最后登录日')->datetime();
+				
+			});
+			$filter->column(1/2, function ($filter) {
+				
 				$filter->group('save_count', '存款次数', function ($group) {
 						
 						$group->equal('等于');
@@ -124,13 +131,30 @@ class MemberController extends Controller
 						
 						
 				});
-			
-			});
-			$filter->column(1/2, function ($filter) {
 				
-				$filter->between('registration_date', '注册日期')->datetime();
+				$filter->group('total_save', '总存款金额', function ($group) {
+						
+						$group->equal('等于');
+						$group->notEqual('不等于');
+						$group->gt('大于');
+						$group->lt('小于');
+						$group->nlt('大于等于');
+						$group->ngt('小于等于');
+						
+						
+				});
 				
-				$filter->between('last_login', '最后登录日')->datetime();
+				$filter->group('total_pay', '总出款金额', function ($group) {
+						
+						$group->equal('等于');
+						$group->notEqual('不等于');
+						$group->gt('大于');
+						$group->lt('小于');
+						$group->nlt('大于等于');
+						$group->ngt('小于等于');
+						
+						
+				});
 				
 				$filter->group('offline_days', '多久没登录', function ($group) {
 						
