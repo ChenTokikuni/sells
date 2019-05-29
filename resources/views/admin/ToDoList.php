@@ -6,7 +6,7 @@
               <h3 class="box-title">To Do List</h3>
 
               <div class="box-tools pull-right">
-                <ul class="pagination pagination-sm inline">
+                <ul class="pagination pagination-sm inline" >
                   <li><a href="#">&laquo;</a></li>
                   <li><a href="#">1</a></li>
                   <li><a href="#">2</a></li>
@@ -18,7 +18,7 @@
             <!-- /.box-header -->
             <div class="box-body">
               <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
-              <ul class="todo-list">
+              <ul class="todo-list" id = "list-ul">
                 <li>
                   <!-- drag handle -->
                   <span class="handle">
@@ -106,7 +106,7 @@
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix no-border">
-              <button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add item</button>
+              <button onclick="myFunction()" type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add item</button>
             </div>
           </div>
           <!-- /.box -->
@@ -114,3 +114,13 @@
 <script src="/js/pages/dashboard.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="/js/pages/jquery-ui/jquery-ui.min.js"></script>
+
+<script>
+	function myFunction() {
+	  var node = document.createElement("LI");
+	  var textnode = document.createTextNode("Water");
+	  
+	  node.appendChild(textnode);
+	  document.getElementById('list-ul').appendChild(node);
+	}
+</script>

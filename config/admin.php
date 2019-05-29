@@ -221,7 +221,7 @@ return [
          * or specific method to path like: get:admin/auth/logs.
          */
         'except' => [
-            'admin/auth/logs*',
+            //'admin/auth/logs*',
         ],
     ],
 
@@ -273,7 +273,7 @@ return [
     | "sidebar-mini".
     |
     */
-    'layout' => ['sidebar-mini', 'sidebar-collapse'],
+    'layout' => ['sidebar-mini'],
 
     /*
     |--------------------------------------------------------------------------
@@ -330,7 +330,14 @@ return [
     |--------------------------------------------------------------------------
     */
     'minify_assets' => true,
-
+	
+	/*
+    |--------------------------------------------------------------------------
+    | Enable/Disable sidebar menu search
+    |--------------------------------------------------------------------------
+    */
+    'enable_menu_search' => false,
+	
     /*
     |--------------------------------------------------------------------------
     | Extension Directory
