@@ -139,7 +139,33 @@ class LogsController extends Controller
 		
 		$grid->column('ip', 'IP位置');
 		
-		$grid->column('input', '操作');
+		$action_name = [];
+		$action_name = $this->getAction();
+		//print_r($action_name);exit;
+		$grid->column('method', '操作')->display(function ($method) use($action_name){
+			
+				if(isset($action_name[$this->id])){
+					if($action_name[$this->id] == '登录'){
+						return "<span class=\"label label-success\">{$action_name[$this->id]}</span>";
+					}
+					if($action_name[$this->id] == '删除'){
+						return "<span class=\"label label-danger\">{$action_name[$this->id]}</span>";
+					}
+					if($action_name[$this->id] == '上传'){
+						return "<span class=\"label label-warning\">{$action_name[$this->id]}</span>";
+					}
+					if($action_name[$this->id] == '修改'){
+						return "<span class=\"label label-warning\">{$action_name[$this->id]}</span>";
+					}
+					if($action_name[$this->id] == '登出'){
+						return "<span class=\"label label-success\">{$action_name[$this->id]}</span>";
+					}
+				}else{
+					
+					return '未知操作';
+					
+				}
+			});
 		
 		$grid->column('created_at', '操作时间');
 		
@@ -173,7 +199,7 @@ class LogsController extends Controller
 	
 	protected function getUsername()
 	{
-		$users = "SELECT id , username ,name FROM admin_users";
+		$users = "SELECT id , username  FROM admin_users";
 		
 		$user = DB::select($users);
 		
@@ -183,6 +209,49 @@ class LogsController extends Controller
 		
 		//print_r($user_data);exit;
 		return $user_data;
+	}
+	protected function getAction()
+	{
+		//get action data for database except get
+		$actions = "SELECT id , method  FROM admin_operation_log WHERE method NOT LIKE 'GET'";
+		$action = DB::select($actions);
+		
+		$actions_logout = "SELECT id , path  FROM admin_operation_log WHERE `path`='admin/auth/logout'";
+		$action_logout = DB::select($actions_logout);
+		
+		foreach($action as $k=>$v){
+			$action_check = $this->get_action($v->method);
+			$action_data[$v->id] = $action_check;
+		}
+		foreach($action_logout as $k=>$v){
+			$action_check = $this->get_action($v->path);
+			$action_data[$v->id] = $action_check;
+		}
+		//print_r($action_data);exit;
+		return $action_data;
+	}
+	protected function get_action($method) {
+		switch ($method) {
+			case 'POST':
+				$action = '上传';
+				break;
+			case 'PUT':
+				$action = '修改';
+				break;
+			case 'DELETE':
+				$action = '删除';
+				break;
+			case 'OPTIONS':
+				$action = '登录';
+				break;
+			case 'admin/auth/logout':
+				$action = '登出';
+				break;
+			default:
+				$action = $method;
+		}
+
+		return $action;
 	}
 }
 

@@ -324,9 +324,9 @@ class MemberController extends Controller
 		
 		$form->text('bank_number', '银行帐号');
 		
-		$form->number('save_count', '存款次数');
+		$form->number('save_count', '存款次数')->default('0')->min('0');
 		
-		$form->number('pay_count', '出款次数');
+		$form->number('pay_count', '出款次数')->default('0')->min('0');
 		
 		$form->currency('total_save', '总存款金额')->symbol('CNY');
 		
@@ -336,7 +336,7 @@ class MemberController extends Controller
 		
 		$form->datetime('last_login', '最后登录日');
 		
-		$form->text('offline_days', '多久没登录');
+		$form->number('offline_days', '多久没登录')->default('0')->min('0');
 
         return $form;
     }

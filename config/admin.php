@@ -221,7 +221,8 @@ return [
          * or specific method to path like: get:admin/auth/logs.
          */
         'except' => [
-            //'admin/auth/logs*',
+            'admin/auth/logs*',
+			'admin/operation*',
         ],
     ],
 
