@@ -89,7 +89,7 @@ class RoleController extends Controller
 		$grid->disableExport();
 		$grid->disableColumnSelector();//关闭数据表格列选择器
         //$grid->id('ID')->sortable();
-        $grid->slug(trans('admin.slug'));
+        //$grid->slug(trans('admin.slug'));
         $grid->name(trans('admin.name'));
 
         $grid->permissions(trans('admin.permission'))->pluck('name')->label();
@@ -180,13 +180,13 @@ class RoleController extends Controller
 		});
         //$form->display('id', 'ID');
 
-        $form->text('slug', trans('admin.slug'))->rules('required');
+        $form->hidden('slug', trans('admin.slug'))->default(date('ymd').rand(1,999))->rules('required');
         $form->text('name', '角色')->rules('required');
         $form->listbox('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
         //$form->display('created_at', trans('admin.created_at'));
         //$form->display('updated_at', trans('admin.updated_at'));
-
+	
         return $form;
     }
 }

@@ -165,7 +165,7 @@ class LogsController extends Controller
 					}
 				}else{
 					
-					return '未知操作';
+					return '檢視';
 					
 				}
 			});

@@ -205,29 +205,13 @@ class MemberController extends Controller
 		
 		$grid->column('name', '姓名');
 		
-		$grid->column('phone_number', '手机号')->display(function () {
-			
-			return "<i class=\"fa fa-phone\"></i> $this->phone_number";
-			
-		});
+		$grid->column('phone_number', '手机号');
 		
-		$grid->column('mail', '邮箱')->display(function () {
-			
-			return "<i class=\"fa fa-envelope\"></i> $this->mail";
-			
-		});
+		$grid->column('mail', '邮箱');
 
-		$grid->column('qq_number', 'QQ号')->display(function () {
-			
-			return "<i class=\"fa fa-qq\"></i> $this->qq_number";
-			
-		});
+		$grid->column('qq_number', 'QQ号');
 		
-		$grid->column('bank_number', '银行帐号')->display(function () {
-			
-			return "<i class=\"fa fa-bank\"></i> $this->bank_number";
-			
-		});
+		$grid->column('bank_number', '银行帐号');
 		
 		$grid->column('save_count', '存款次数')->display(function() {
 			
@@ -241,12 +225,12 @@ class MemberController extends Controller
 		
 		$grid->column('total_save', '总存款金额')->display(function() {
 			
-			return "<i class=\"fa fa-cny\"></i> ".$this->total_save.'元';
+			return $this->total_save.'元';
 		});
 		
 		$grid->column('total_pay', '总出款金额')->display(function() {
 			
-			return "<i class=\"fa fa-cny\"></i> ".$this->total_pay.'元';
+			return $this->total_pay.'元';
 		});
 		
 		$grid->column('registration_date', '注册日期');
