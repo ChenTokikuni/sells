@@ -96,12 +96,7 @@ class AuthController extends Controller
 						'updated_at' => date('Y-m-d H:i:s')
 					]
 				);
-				/*write user session id*/
-				$user_session_id = session()->getId();
-				DB::table('admin_users')
-				->where('id','like',Admin::user()->id)
-				->update(['session_id'=>$user_session_id,'updated_at' => date('Y-m-d H:i:s')]);
-				/**/
+				
 				return $this->sendLoginResponse($request);
 			}
 		}
@@ -246,6 +241,13 @@ class AuthController extends Controller
         admin_toastr(trans('admin.login_successful'));
 
         $request->session()->regenerate();
+
+		/*write user session id*/
+				$user_session_id = session()->getId();
+				DB::table('admin_users')
+				->where('id','like',Admin::user()->id)
+				->update(['session_id'=>$user_session_id,'updated_at' => date('Y-m-d H:i:s')]);
+		/**/
 
         return redirect()->intended($this->redirectPath());
     }

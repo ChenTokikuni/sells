@@ -28,6 +28,12 @@ class Authenticate
             return redirect()->guest($redirectTo);
         }
 		
+		/*
+		$checkAuth = Auth::user()->id;
+		
+		if($checkAuth == 1){
+			return redirect()->guest($redirectTo);
+		}*/
 		
         return $next($request);
     }
