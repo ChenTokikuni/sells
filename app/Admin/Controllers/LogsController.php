@@ -93,13 +93,16 @@ class LogsController extends Controller
 		//關閉新增按鈕
 		$grid->disableCreateButton();
 		//自訂
+		
+		$grid->disableColumnSelector();//关闭数据表格列选择器
+		
 		$grid->filter(function($filter){
 
 			$filter->disableIdFilter();
 
 			// 在这里添加字段过滤器
 			$filter->like('user_id', '操作者')->select($this->getUsername());
-			$filter->like('input', '操作');
+			$filter->like('method', '操作');
 			
 
 		});

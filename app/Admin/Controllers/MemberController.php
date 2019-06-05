@@ -87,7 +87,7 @@ class MemberController extends Controller
 		
 		//關閉導出
 		//$grid->disableExport();
-		
+		$grid->disableColumnSelector();//关闭数据表格列选择器
 		
 		//自訂
 		$grid->filter(function($filter){

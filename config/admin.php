@@ -223,6 +223,7 @@ return [
         'except' => [
             'admin/auth/logs*',
 			'admin/operation*',
+			'admin/auth/login*',
         ],
     ],
 
