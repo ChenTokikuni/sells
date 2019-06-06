@@ -90,7 +90,7 @@ class RoleController extends Controller
 		$grid->disableColumnSelector();//关闭数据表格列选择器
         //$grid->id('ID')->sortable();
         //$grid->slug(trans('admin.slug'));
-        $grid->name(trans('admin.name'));
+        $grid->name('角色');
 
         $grid->permissions(trans('admin.permission'))->pluck('name')->label();
 

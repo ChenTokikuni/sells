@@ -5,7 +5,7 @@ return [
     'login'                 => '登录',
     'logout'                => '登出',
     'setting'               => '设置',
-    'name'                  => '角色',
+    'name'                  => '昵称',
     'username'              => '帐号',
     'password'              => '密码',
     'password_confirmation' => '确认密码',
