@@ -6,7 +6,7 @@ use Closure;
 use Encore\Admin\Admin;
 use Illuminate\Support\Facades\Auth;
 
-
+use Illuminate\Support\Facades\DB;	//sql語法判斷
 
 
 class Authenticate
@@ -28,12 +28,26 @@ class Authenticate
             return redirect()->guest($redirectTo);
         }
 		
-		/*
-		$checkAuth = Auth::user()->id;
+		if(!$this->shouldPassThrough($request)){
+			$default_num = 0;
+			$data_session = DB::table('admin_users')
+							->select('session_id')
+							->get()->toArray();
+			$user_session = session()->getId();
+			foreach($data_session as $v){
+				$session_data[$default_num] = $v->session_id;
+				$default_num = $default_num+1;
+			}
+			if(!in_array($user_session,$session_data)){
+				
+				Auth::guard('admin')->logout();
+				$request->session()->invalidate();
+
+				return redirect(config('admin.route.prefix'));
+			}
+		}
 		
-		if($checkAuth == 1){
-			return redirect()->guest($redirectTo);
-		}*/
+		
 		
         return $next($request);
     }
