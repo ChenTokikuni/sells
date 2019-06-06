@@ -197,8 +197,9 @@ class MemberController extends Controller
 				//$actions->disableDelete();
 			
 		});
-		
-		
+		$grid->tools(function ($tools) {
+			$tools->append(new \App\Admin\Extensions\Tools\ImportCsv(admin_base_path('member/import')));
+		});
 		$grid->model()->orderBy('created_at','DESC');
 		
 		$grid->column('account', '会员帐号');
@@ -343,6 +344,69 @@ class MemberController extends Controller
 			$options[$row->id] = $row->name;
 		}
 		return $options;
+	}
+	
+		// CSV 資料匯入
+	public function import(\Illuminate\Http\Request $request)
+	{
+		$res = ['error' => '', 'msg' => ''];
+
+		try {
+			$input_name = 'csv_file';
+			if (! $request->hasFile($input_name)) {
+				throw new \Exception('没有档案.');
+			}
+
+			$file = $request->file($input_name);
+			$file_path = $file->path();
+
+			$handle = fopen($file_path, 'r');
+			if ($handle === false) {
+				throw new \Exception('档案开启失败.');
+			}
+
+			// Bulk insert
+			while ($rows = $this->getCsvContents($handle)) {
+				$sql = "INSERT INTO member (id, account, name, phone_number, mail, qq_number, bank_number, save_count, pay_count, total_save, total_pay, registration_date, last_login, offline_days, created_at, updated_at) VALUES ";
+				$values = array_fill(0, count($rows), "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				$binds = []; 							
+				foreach ($rows as $row) {
+					for ($i = 0; $i < 16; $i++) {
+						$binds[] = $row[$i];
+					}
+				}
+				$sql .= implode(', ', $values);/*
+				$sql .= " ON DUPLICATE KEY UPDATE account =VALUES(account), updated_at =NOW()";*/
+				\Illuminate\Support\Facades\DB::insert($sql, $binds);
+			}
+
+			// Response
+			$res['error'] = '000';
+		} catch (\Exception $e) {
+			$res['error'] = $e->getCode();
+			$res['msg'] = $e->getMessage();
+		} finally {
+			if (isset($handle)) {
+				fclose($handle);
+			}
+		}
+
+		return response()->json($res);
+	}
+
+	protected function getCsvContents(&$handle, $limit = 500)
+	{
+		$contents = [];
+
+		$i = 0;
+		while ($data = fgetcsv($handle)) {
+			$contents[] = $data;
+			if (++$i >= $limit) {
+				break;
+			}
+		}
+
+		return $contents;
 	}
 }
 
