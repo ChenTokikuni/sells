@@ -28,6 +28,7 @@ class Authenticate
             return redirect()->guest($redirectTo);
         }
 		
+		
 		if(!$this->shouldPassThrough($request)){
 			$default_num = 0;
 			$data_session = DB::table('admin_users')

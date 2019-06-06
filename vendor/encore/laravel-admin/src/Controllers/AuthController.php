@@ -49,7 +49,7 @@ class AuthController extends Controller
 
         $credentials = $request->only([$this->username(), 'password']);
         $remember = $request->get('remember', false);
-		$message = '您的帐号或密码输入错误';
+		
 		/*transform ip format to database ip*/
 		$user_ip = $request->ip();
 		/*get ip for data base*/
@@ -71,10 +71,13 @@ class AuthController extends Controller
 				}
 			}
 			
+				
 			$message = '您的IP不允许访问';
 			if(empty($ip_new_array)){
 				$message = '您的帐号尚未设定IP白名单';
 			}
+				
+
 		}
 		
 		
@@ -98,8 +101,13 @@ class AuthController extends Controller
 				);
 				
 				return $this->sendLoginResponse($request);
+			}else{
+				$message = '您的帐号或密码输入错误';
 			}
 		}
+		
+			
+		
 		
         return back()->withInput()->withErrors([
             $this->username() => $message,
@@ -177,6 +185,33 @@ class AuthController extends Controller
 
         $form = new Form(new $class());
 
+		$form->tools(function (Form\Tools $tools) {
+			
+			//$tools->disableList();	//列表
+			$tools->disableDelete();	//刪除
+			$tools->disableView();	//查看
+						
+		});
+		//關閉底部按鈕
+		$form->footer(function ($footer) {
+
+			// 去掉`重置`按钮
+			$footer->disableReset();
+
+			// 去掉`提交`按钮
+			//$footer->disableSubmit();
+
+			// 去掉`查看`checkbox
+			$footer->disableViewCheck();
+
+			// 去掉`继续编辑`checkbox
+			$footer->disableEditingCheck();
+
+			// 去掉`继续创建`checkbox
+			$footer->disableCreatingCheck();
+
+		});
+		
         $form->display('username', trans('admin.username'));
         $form->text('name', trans('admin.name'))->rules('required');
         $form->image('avatar', trans('admin.avatar'));
