@@ -164,8 +164,8 @@ class LogsController extends Controller
 						return "<span class=\"label label-success\">{$action_name[$this->id]}</span>";
 					}
 				}else{
-					
-					return '檢視';
+
+					return "<span class=\"label label-primary\">检视</span>";
 					
 				}
 			});
@@ -221,7 +221,7 @@ class LogsController extends Controller
 		
 		$actions_logout = "SELECT id , path  FROM admin_operation_log WHERE `path`='admin/auth/logout'";
 		$action_logout = DB::select($actions_logout);
-		
+		$action_data = [];
 		foreach($action as $k=>$v){
 			$action_check = $this->get_action($v->method);
 			$action_data[$v->id] = $action_check;

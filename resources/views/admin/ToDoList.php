@@ -2,9 +2,6 @@
           <div class="box box-primary">
             <div class="box-header">
               <i class="ion ion-clipboard"></i>
-
-              <h3 class="box-title">To Do List</h3>
-
               <div class="box-tools pull-right">
                 <ul class="pagination pagination-sm inline" >
                   <li><a href="#">&laquo;</a></li>
@@ -19,24 +16,29 @@
             <div class="box-body">
               <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
               <ul class="todo-list" id = "list-ul">
-                <li>
-                  <!-- drag handle -->
-                  <span class="handle">
-                        <i class="fa fa-ellipsis-v"></i>
-                        <i class="fa fa-ellipsis-v"></i>
-                      </span>
-                  <!-- checkbox -->
-                  <input type="checkbox" value="">
-                  <!-- todo text -->
-                  <span class="text">Design a nice theme</span>
-                  <!-- Emphasis label -->
-                  <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
-                  <!-- General tools such as edit or delete-->
-                  <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
-                  </div>
-                </li>
+			  <?php
+				foreach($listdatas as $v)
+				{
+					?>
+					<li>
+					  <!-- drag handle -->
+					  <span class="handle">
+							<i class="fa fa-ellipsis-v"></i>
+							<i class="fa fa-ellipsis-v"></i>
+						  </span>
+
+					  <!-- todo text -->
+					  <span class="text-<?php echo $v->id ?>"><?php echo $v->text ?></span>
+					  <!-- Emphasis label -->
+					  <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
+					  <!-- General tools such as edit or delete-->
+					  <div class="tools">
+						<i class="fa fa-edit " onClick = "listChange('edit',<?php echo $v->id ?>)"></i>
+						<i class="fa fa-trash-o " onClick = "listChange('remove',<?php echo $v->id ?>)"></i>
+					  </div>
+					</li>
+				<?php } ?>
+				<!--
                 <li>
                       <span class="handle">
                         <i class="fa fa-ellipsis-v"></i>
@@ -101,13 +103,18 @@
                     <i class="fa fa-edit"></i>
                     <i class="fa fa-trash-o"></i>
                   </div>
-                </li>
+                </li>-->
               </ul>
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix no-border">
-              <button onclick="myFunction()" type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add item</button>
-            </div>
+				<div class="input-group">
+					<input class="form-control"  id ="textInput"placeholder="输入待办事项....">
+					<div class="input-group-btn" onClick = "listAdd()">
+					  <button type="button" class="btn btn-success" ><i class="fa fa-plus"></i></button>
+					</div>
+				</div>
+			</div>
           </div>
           <!-- /.box -->
 
@@ -116,11 +123,46 @@
 <script src="/js/pages/jquery-ui/jquery-ui.min.js"></script>
 
 <script>
-	function myFunction() {
-	  var node = document.createElement("LI");
-	  var textnode = document.createTextNode("Water");
-	  
-	  node.appendChild(textnode);
-	  document.getElementById('list-ul').appendChild(node);
+
+	//list data api
+	function listChange(action,id){
+		//console.log( action + id );
+			$.ajax({
+				type: 'get',
+				url: '/admin/listChange',
+				dataType: 'json',
+				data: { action , id },
+				success: function(load_data){
+					//console.log(load_data['error']);
+					toastr.success(load_data['error']);
+					$.pjax.reload("#pjax-container");
+				},
+			});
 	}
+	
+	//add list data when buttom click
+	function listAdd(){
+		var input = document.getElementById('textInput').value;
+		var checkIsnull = isNull(input);
+		//console.log(checkIsnull);
+		if(!checkIsnull){
+			var action = 'add';
+			//add input data
+			listChange(action,input);
+			//clear input
+			document.getElementById('textInput').value="";
+		}else{
+			alert('需输入待办事项且不能全为空格');
+		}
+		
+	}
+	
+	//check input value is null and all space
+	function isNull( str ){
+	if ( str == "" ) return true;
+	var regu = "^[ ]+$";
+	var re = new RegExp(regu);
+	return re.test(str);
+	}
+
 </script>

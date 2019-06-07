@@ -29,10 +29,11 @@ class LogOperation
                 'ip'      => $request->getClientIp(),
                 'input'   => json_encode($request->input()),
             ];
+			/*
 				$user_session_id = session()->getId();
 				DB::table('test')
 				->insert(['test'=>$user_session_id,'updated_at' => date('Y-m-d H:i:s')]);
-				
+				*/
             try {
                 OperationLogModel::create($log);
             } catch (\Exception $exception) {

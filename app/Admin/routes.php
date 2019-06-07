@@ -9,7 +9,7 @@ Route::group([
     'namespace'     => config('admin.route.namespace'),
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
-
+	$router->get('/listChange', 'HomeController@listChange');
     $router->get('/', 'HomeController@index')->name('admin.home');
 	
 	//$router->post('auth/login', 'AuthController@login');	//登入api
