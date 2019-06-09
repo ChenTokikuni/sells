@@ -331,7 +331,7 @@ class MemberController extends Controller
 
 		$rows = \App\Model\member::all();
 		foreach ($rows as $row) {
-			$options[$row->id] = $row->account;
+			$options[$row->account] = $row->account;
 		}
 		return $options;
 	}
@@ -341,7 +341,7 @@ class MemberController extends Controller
 
 		$rows = \App\Model\member::all();
 		foreach ($rows as $row) {
-			$options[$row->id] = $row->name;
+			$options[$row->account] = $row->name;
 		}
 		return $options;
 	}
@@ -364,19 +364,20 @@ class MemberController extends Controller
 			if ($handle === false) {
 				throw new \Exception('档案开启失败.');
 			}
-
+			
+			setlocale(\LC_ALL, 'en_US.UTF-8');
 			// Bulk insert
 			while ($rows = $this->getCsvContents($handle)) {
-				$sql = "INSERT INTO member (id, account, name, phone_number, mail, qq_number, bank_number, save_count, pay_count, total_save, total_pay, registration_date, last_login, offline_days, created_at, updated_at) VALUES ";
-				$values = array_fill(0, count($rows), "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				$sql = "INSERT INTO member ( account, name, phone_number, mail, qq_number, bank_number, save_count, pay_count, total_save, total_pay, registration_date, last_login, offline_days, created_at, updated_at) VALUES ";
+				$values = array_fill(0, count($rows), "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
 				$binds = []; 							
 				foreach ($rows as $row) {
-					for ($i = 0; $i < 16; $i++) {
+					for ($i = 0; $i < 13; $i++) {
 						$binds[] = $row[$i];
 					}
 				}
-				$sql .= implode(', ', $values);/*
-				$sql .= " ON DUPLICATE KEY UPDATE account =VALUES(account), updated_at =NOW()";*/
+				$sql .= implode(', ', $values);
+				$sql .= " ON DUPLICATE KEY UPDATE account =VALUES(account), updated_at =NOW()";
 				\Illuminate\Support\Facades\DB::insert($sql, $binds);
 			}
 
