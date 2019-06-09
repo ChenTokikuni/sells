@@ -1,5 +1,6 @@
 <!-- TO DO List -->
           <div class="box box-primary">
+		  <!--
             <div class="box-header">
               <i class="ion ion-clipboard"></i>
               <div class="box-tools pull-right">
@@ -12,20 +13,19 @@
                 </ul>
               </div>
             </div>
+			-->
             <!-- /.box-header -->
             <div class="box-body">
               <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
               <ul class="todo-list" id = "list-ul">
 			  <?php
+				$default = 1;
 				foreach($listdatas as $v)
 				{
 					?>
 					<li>
 					  <!-- drag handle -->
-					  <span class="handle">
-							<i class="fa fa-ellipsis-v"></i>
-							<i class="fa fa-ellipsis-v"></i>
-						  </span>
+					  <span ><?php echo $default.' . ' ?></span>
 
 					  <!-- todo text -->
 						  <input readonly id="in-<?php echo $v->id ?>" name ="in-<?php echo $v->id ?>" value="<?php echo $v->text ?>" />
@@ -42,7 +42,7 @@
 						<i class="fa fa-trash-o " onClick = "listChange('remove',<?php echo $v->id ?>)"></i>
 					  </div>
 					</li>
-				<?php } ?>
+				<?php $default = $default+1; } ?>
 				<!--
                 <li>
                       <span class="handle">
