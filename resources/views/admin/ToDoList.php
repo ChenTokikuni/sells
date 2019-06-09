@@ -28,12 +28,17 @@
 						  </span>
 
 					  <!-- todo text -->
-					  <span class="text-<?php echo $v->id ?>"><?php echo $v->text ?></span>
+						  <input readonly id="in-<?php echo $v->id ?>" name ="in-<?php echo $v->id ?>" value="<?php echo $v->text ?>" />
+					  <div  id ="edit-<?php echo $v->id ?>"style = "display:none">
+						  <button  class=" label-success" onclick = "submitList(<?php echo $v->id ?>)">提交</button>
+					  </div>
 					  <!-- Emphasis label -->
+					  <!--
 					  <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
+					  -->
 					  <!-- General tools such as edit or delete-->
 					  <div class="tools">
-						<i class="fa fa-edit " onClick = "listChange('edit',<?php echo $v->id ?>)"></i>
+						<i class="fa fa-edit " id = "listEdit-<?php echo $v->id ?>" onClick = "listEdit(<?php echo $v->id ?>)"></i>
 						<i class="fa fa-trash-o " onClick = "listChange('remove',<?php echo $v->id ?>)"></i>
 					  </div>
 					</li>
@@ -125,13 +130,13 @@
 <script>
 
 	//list data api
-	function listChange(action,id){
+	function listChange(action,id,text = ''){
 		//console.log( action + id );
 			$.ajax({
 				type: 'get',
 				url: '/admin/listChange',
 				dataType: 'json',
-				data: { action , id },
+				data: { action , id , text },
 				success: function(load_data){
 					//console.log(load_data['error']);
 					toastr.success(load_data['error']);
@@ -157,6 +162,23 @@
 		
 	}
 	
+	//edit list data when buttom click
+	function listEdit(id){
+		document.getElementById('edit-' + id).style.display = 'inline';
+		document.getElementById('listEdit-' + id).style.display = 'none';
+		document.getElementById('in-' + id).readOnly = false;
+		
+	}
+	
+	function submitList(id){
+		var action = 'edit';
+		var input = document.getElementById('in-' + id).value;
+
+		listChange(action,id,input);
+		document.getElementById('in-' + id).readOnly = true;
+		document.getElementById('listEdit-' + id).style.display = 'inline';
+		document.getElementById('edit-' + id).style.display = 'none';
+	}
 	//check input value is null and all space
 	function isNull( str ){
 	if ( str == "" ) return true;
@@ -164,5 +186,6 @@
 	var re = new RegExp(regu);
 	return re.test(str);
 	}
+	
 
 </script>

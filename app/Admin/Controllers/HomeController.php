@@ -64,6 +64,7 @@ class HomeController extends Controller
 			$input = $request->all();
 			$list_action = $input['action'];
 			$list_id = $input['id'];
+			$list_text = $input['text'];
 			
 		}else{
 			$request = [
@@ -76,7 +77,7 @@ class HomeController extends Controller
 		if($list_action == 'edit'){
 			$listdata = DB::table('todolist')
 						->where('id' ,'=',$list_id)
-						->update('text');
+						->update(['text'=>$list_text]);
 						
 						
 			$request = [
