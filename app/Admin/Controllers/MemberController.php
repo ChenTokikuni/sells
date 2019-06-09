@@ -365,7 +365,7 @@ class MemberController extends Controller
 				throw new \Exception('档案开启失败.');
 			}
 			
-			setlocale(\LC_ALL, 'en_US.UTF-8');
+			//setlocale(\LC_ALL, 'en_US.UTF-8');
 			// Bulk insert
 			while ($rows = $this->getCsvContents($handle)) {
 				$sql = "INSERT INTO member ( account, name, phone_number, mail, qq_number, bank_number, save_count, pay_count, total_save, total_pay, registration_date, last_login, offline_days, created_at, updated_at) VALUES ";
