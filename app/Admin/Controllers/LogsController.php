@@ -144,7 +144,7 @@ class LogsController extends Controller
 		
 		$action_name = [];
 		$action_name = $this->getAction();
-		//print_r($action_name);exit;
+		
 		$grid->column('method', '操作')->display(function ($method) use($action_name){
 			
 				if(isset($action_name[$this->id])){
@@ -168,6 +168,23 @@ class LogsController extends Controller
 					return "<span class=\"label label-primary\">检视</span>";
 					
 				}
+			});
+			
+		$path_name = [];
+		$path_name = $this-> getPath();
+		
+		$grid->column('path', '操作位置')->display(function ($path) use($path_name){
+				if(isset($path_name[$this->id])){
+					return$path_name[$this->id];
+					}else{
+						if($path =='admin'){
+							return'首页';
+						}
+						if($path =='admin/auth/logout' || $path =='admin/auth/login'){
+							return'登录登出页';
+						}
+						return$path;
+					}
 			});
 		
 		$grid->column('created_at', '操作时间');
@@ -221,13 +238,25 @@ class LogsController extends Controller
 		
 		$actions_logout = "SELECT id , path  FROM admin_operation_log WHERE `path`='admin/auth/logout'";
 		$action_logout = DB::select($actions_logout);
+		
+		$actions_list = "SELECT id , path , input FROM admin_operation_log WHERE `path`='admin/listChange'";
+		$action_list = DB::select($actions_list);
+		
 		$action_data = [];
+		//all action
 		foreach($action as $k=>$v){
 			$action_check = $this->get_action($v->method);
 			$action_data[$v->id] = $action_check;
 		}
+		//logout action
 		foreach($action_logout as $k=>$v){
 			$action_check = $this->get_action($v->path);
+			$action_data[$v->id] = $action_check;
+		}
+		//action list
+		foreach($action_list as $k=>$v){
+			
+			$action_check = $this->get_action(json_decode($v->input)->action);
 			$action_data[$v->id] = $action_check;
 		}
 		//print_r($action_data);exit;
@@ -250,11 +279,75 @@ class LogsController extends Controller
 			case 'admin/auth/logout':
 				$action = '登出';
 				break;
+			case 'remove':
+				$action = '删除';
+				break;
+			case 'add':
+				$action = '上传';
+				break;
+			case 'edit':
+				$action = '修改';
+				break;
 			default:
 				$action = $method;
 		}
 
 		return $action;
+	}
+	// get action path
+	protected function getPath()
+	{
+		
+		//get data
+		$paths = "SELECT id , path  FROM admin_operation_log ";
+		$path = DB::select($paths);
+		
+		$new_path = [];
+		
+		foreach($path as $k=>$v){
+			$new_path[$v->id]= explode('/',$path[$k]->path);
+			//print_r($new_path[$k]);exit;
+			$new_path[$v->id] = $this->get_path($new_path[$v->id]);
+		}
+		return($new_path);
+	}	
+	
+	protected function get_path($method) {
+		
+		if(in_array('member',$method)){
+			$method = '会员列表';
+			return $method;
+		}
+		if(in_array('users',$method)){
+			$method = '帐号管理';
+			return $method;
+		}
+		if(in_array('roles',$method)){
+			$method = '角色设定';
+			return $method;
+		}
+		if(in_array('permissions',$method)){
+			$method = '权限设定';
+			return $method;
+		}
+		if(in_array('menu',$method)){
+			$method = '菜单设定';
+			return $method;
+		}
+		if(in_array('upload',$method)){
+			$method = '会员资料导入';
+			return $method;
+		}
+		if(in_array('operation',$method)){
+			$method = '操作纪录';
+			return $method;
+		}
+		if(in_array('listChange',$method)){
+			$method = '首页-待办事项';
+			return $method;
+		}
+
+		
 	}
 }
 

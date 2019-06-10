@@ -153,7 +153,8 @@
 		if(!checkIsnull){
 			var action = 'add';
 			//add input data
-			listChange(action,input);
+			var id = '';
+			listChange(action,id,input);
 			//clear input
 			document.getElementById('textInput').value="";
 		}else{

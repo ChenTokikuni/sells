@@ -101,7 +101,7 @@ class HomeController extends Controller
 						->max('id');
 			$new_num = $last_num+1;
 			$listdata = DB::table('todolist')
-						->insert(['id'=>$new_num,'text' => $list_id]);
+						->insert(['id'=>$new_num,'text' => $list_text]);
 							
 			$request = [
 			'error'=>'新增成功'

@@ -6,6 +6,8 @@ use Closure;
 use Encore\Admin\Admin;
 use Illuminate\Support\Facades\Auth;
 
+use Encore\Admin\Form;
+use Encore\Admin\Layout\Content;
 use Illuminate\Support\Facades\DB;	//sql語法判斷
 
 
@@ -40,7 +42,18 @@ class Authenticate
 				$default_num = $default_num+1;
 			}
 			if(!in_array($user_session,$session_data)){
-				
+				$function_check = new Admin();
+				$check_id = $function_check->user()->id;
+				$data_log = DB::table('admin_operation_log')
+							->insert([
+								'user_id'=>$check_id,
+								'path'=>'admin/auth/logout',
+								'method'=>'GET',
+								'ip'=>$request->ip(),
+								'input'=>'{"action":"登出"}',
+								'created_at' => date('Y-m-d H:i:s'),
+								'updated_at' => date('Y-m-d H:i:s')
+							]);
 				Auth::guard('admin')->logout();
 				$request->session()->invalidate();
 
