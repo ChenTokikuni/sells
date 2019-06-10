@@ -183,6 +183,9 @@ class LogsController extends Controller
 						if($path =='admin/auth/logout' || $path =='admin/auth/login'){
 							return'登录登出页';
 						}
+						if($path =='admin/auth/setting' ){
+							return'个人帐号设置';
+						}
 						return$path;
 					}
 			});
