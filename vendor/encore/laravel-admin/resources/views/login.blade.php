@@ -13,7 +13,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ admin_asset("vendor/laravel-admin/AdminLTE/dist/css/AdminLTE.min.css") }}">
   <!-- iCheck -->
-  <link rel="stylesheet" href="{{ admin_asset("vendor/laravel-admin/AdminLTE/plugins/iCheck/square/blue.css") }}">
+  <link rel="stylesheet" href="{{ admin_asset("vendor/laravel-admin/AdminLTE/plugins/iCheck/square/green.css") }}">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,7 +41,7 @@
         @endif
 
         <input type="text" class="form-control" placeholder="{{ trans('admin.username') }}" name="username" value="{{ old('username') }}">
-        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback {!! !$errors->has('password') ?: 'has-error' !!}">
 
@@ -68,7 +68,7 @@
         <!-- /.col -->
         <div class="col-xs-4">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('admin.login') }}</button>
+          <button type="submit" class="btn btn-success btn-block btn-flat">{{ trans('admin.login') }}</button>
         </div>
         <!-- /.col -->
       </div>
@@ -88,8 +88,8 @@
 <script>
   $(function () {
     $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
+      checkboxClass: 'icheckbox_square-green',
+      radioClass: 'iradio_square-green',
       increaseArea: '20%' // optional
     });
   });
