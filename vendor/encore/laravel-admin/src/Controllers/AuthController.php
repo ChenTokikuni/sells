@@ -88,9 +88,10 @@ class AuthController extends Controller
 			
 			if ($this->guard()->attempt($credentials, $remember)) {
 				/*write login log*/
+				$user_id = Admin::user()->id;
 				DB::table('admin_operation_log')->insert(
 					[
-						'user_id'=> Admin::user()->id,
+						'user_id'=> $user_id,
 						'path'=>'admin/auth/login',
 						'method'=>'OPTIONS',
 						'ip'=>$request->ip(),
@@ -99,7 +100,7 @@ class AuthController extends Controller
 						'updated_at' => date('Y-m-d H:i:s')
 					]
 				);
-				
+
 				return $this->sendLoginResponse($request);
 			}else{
 				$message = '您的帐号或密码输入错误';
@@ -136,6 +137,7 @@ class AuthController extends Controller
      */
     public function getLogout(Request $request)
     {
+
         $this->guard()->logout();
 
         $request->session()->invalidate();
