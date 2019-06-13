@@ -27,8 +27,10 @@ class HomeController extends Controller
 				// get member count
 				$member_count = $this->memberCount();
 				
+				$getLoginstatus = $this->getLoginstatus();
+				
 				//infobox
-                $row->column(6, new InfoBox('目前在线帐号人数', 'users', 'green', config('admin.route.prefix') . '/auth/users', '2'));
+                $row->column(6, new InfoBox('目前在线帐号人数', 'users', 'green', config('admin.route.prefix') . '/auth/users', $getLoginstatus));
                 $row->column(6, new InfoBox('会员列表总数', 'list-alt', 'orange', config('admin.route.prefix') . '/member', $member_count));
 				
 				//to do list box
@@ -108,5 +110,70 @@ class HomeController extends Controller
 			];
 		}
 		return $request;
+	}
+	protected function getLoginstatus(){
+		
+		//get all user id
+		$user_id = DB::table('admin_users')
+					->select('id','name')
+					->get()
+					->toArray();
+		$online = $total_user = count($user_id);
+		$user_ids =[];
+		$default = 0;
+		$outline = 0;
+		
+		$session_timeout = date("Y-m-d H:i:s ",strtotime(date("Y-m-d H:i:s ").'-2 hours'));
+		foreach($user_id as $v){
+			$user_lastlogin[$default] =$this->lastLogin($v->id,$session_timeout);
+			$default = $default+1;
+			
+		}
+		
+		//print_r($user_lastlogin);exit;
+		
+		$default = 0;
+		foreach($user_lastlogin as $v){
+			if(isset($v->created_at)){
+				
+			$last_time = date("Y-m-d H:i:s ",strtotime($v->created_at.'+2 hours'));
+			$user_lastlogout[$default] = $this->lastLogout($v->user_id,$v->created_at,$last_time);
+			$default = $default+1;
+			}else{
+				$online =$online-1;
+			}
+		}//print_r($user_lastlogout);exit;
+		
+		
+		foreach($user_lastlogout as $v){
+			if(isset($v)){
+				$online = $online-1;
+			}
+		}
+		return $online;
+	}
+	
+	protected function lastLogin($user_ids,$session_timeout){
+	
+		$last_login = DB::table('admin_operation_log')
+			->where('path', '=' ,'admin/auth/login')
+			->where('user_id','=',$user_ids)
+			->where('created_at','>',$session_timeout)
+			->orderBy('id','desc')
+			->first();
+		
+		return $last_login;
+	}
+	protected function lastLogout($user_id,$first_time,$last_time){
+		
+		$last_logout = DB::table('admin_operation_log')
+			->where('path', '=' ,'admin/auth/logout')
+			->where('user_id','=',$user_id)
+			->whereBetween('created_at',[$first_time,$last_time])
+			->orderBy('id','desc')
+			->first();
+			
+		return $last_logout;
+		
 	}
 }

@@ -102,7 +102,7 @@ class LogsController extends Controller
 
 			// 在这里添加字段过滤器
 			$filter->like('user_id', '操作者')->select($this->getUsername());
-			$filter->like('method', '操作');
+			//$filter->like('method', '操作');
 			
 
 		});

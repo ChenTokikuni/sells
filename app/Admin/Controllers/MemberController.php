@@ -331,7 +331,7 @@ class MemberController extends Controller
 
 		$rows = \App\Model\member::all();
 		foreach ($rows as $row) {
-			$options[$row->account] = $row->account;
+			$options[$row->id] = $row->account;
 		}
 		return $options;
 	}
@@ -341,7 +341,7 @@ class MemberController extends Controller
 
 		$rows = \App\Model\member::all();
 		foreach ($rows as $row) {
-			$options[$row->account] = $row->name;
+			$options[$row->id] = $row->name;
 		}
 		return $options;
 	}
