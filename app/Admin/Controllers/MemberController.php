@@ -317,7 +317,7 @@ class MemberController extends Controller
 		
 		$form->currency('total_pay', '总出款金额')->symbol('CNY');
 		
-		$form->datetime('registration_date', '注册日期');
+		$form->datetime('registration_date', '注册日期')->format('YYYY/MM/DD HH:mm');
 		
 		$form->datetime('last_login', '最后登录日');
 		
