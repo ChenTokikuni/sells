@@ -13,6 +13,8 @@ use Encore\Admin\Facades\Admin;		//用戶判斷
 
 use Illuminate\Support\Facades\DB;	//sql語法判斷
 
+use App\Admin\Extensions\PostsExporter;	//laravel-excel
+
 class MemberController extends Controller
 {
 	
@@ -88,6 +90,7 @@ class MemberController extends Controller
 		//關閉導出
 		//$grid->disableExport();
 		$grid->disableColumnSelector();//关闭数据表格列选择器
+		
 		
 		//自訂
 		$grid->filter(function($filter){
@@ -170,8 +173,8 @@ class MemberController extends Controller
 				
 			});
 		});
-		
-		
+
+		$grid->exporter(new PostsExporter());
 		if (!Admin::user()->can('data_edit')) {
 			 
 				//禁用操作列
