@@ -173,19 +173,22 @@ class MemberController extends Controller
 				
 			});
 		});
-
-		$grid->exporter(new PostsExporter());
-		if (!Admin::user()->can('data_edit')) {
+		if (Admin::user()->can('download_data')) {
+			$grid->exporter(new PostsExporter());
+		}else{
+			//關閉導出
+			$grid->disableExport();
+			
+		}
+		
+		if (!(Admin::user()->can('data_edit'))) {
 			 
 				//禁用操作列
 				$grid->disableActions();
 				
 				//關閉新增按鈕
 				$grid->disableCreateButton();
-				
-				//關閉導出
-				$grid->disableExport();
-				
+		
 				// 關閉選擇器
 				$grid->disableRowSelector();
 			 }
