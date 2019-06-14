@@ -368,15 +368,17 @@ class MemberController extends Controller
 				throw new \Exception('档案开启失败.');
 			}
 			
-			setlocale(\LC_ALL, 'en_US.UTF-8');
+			//setlocale(\LC_ALL, 'en_US.UTF-8');
 			// Bulk insert
+			
+
 			
 			while ($rows = $this->getCsvContents($handle)) {
 				
 				$sql = "INSERT INTO member ( account, name, phone_number, mail, qq_number, bank_number, save_count, pay_count, total_save, total_pay, registration_date, last_login, offline_days, created_at, updated_at ) VALUES ";
 				
 				$values = array_fill(0, count($rows), "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW() )");
-				//print_r($values);exit;
+				
 				$binds = []; 							
 				foreach ($rows as $row) {
 					for ($i = 0; $i < 13; $i++) {
@@ -385,7 +387,7 @@ class MemberController extends Controller
 				}
 				$sql .= implode(', ', $values);
 
-				$sql .= " ON DUPLICATE KEY UPDATE account =VALUES(account), updated_at =NOW()";
+				$sql .= " ON DUPLICATE KEY UPDATE account =VALUES(account),name =VALUES(name),phone_number =VALUES(phone_number),mail =VALUES(mail),qq_number =VALUES(qq_number),bank_number =VALUES(bank_number),save_count =VALUES(save_count),pay_count =VALUES(pay_count),total_save =VALUES(total_save),total_pay =VALUES(total_pay),registration_date =VALUES(registration_date),last_login =VALUES(last_login),offline_days =VALUES(offline_days),  updated_at =NOW()";
 				\Illuminate\Support\Facades\DB::insert($sql, $binds);
 			}
 
