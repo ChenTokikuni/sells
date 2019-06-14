@@ -131,7 +131,7 @@ class HomeController extends Controller
 		}
 		
 		//print_r($user_lastlogin);exit;
-		
+		$user_lastlogout = [];
 		$default = 0;
 		foreach($user_lastlogin as $v){
 			if(isset($v->created_at)){

@@ -200,9 +200,11 @@ class MemberController extends Controller
 				//$actions->disableDelete();
 			
 		});
-		$grid->tools(function ($tools) {
-			$tools->append(new \App\Admin\Extensions\Tools\ImportCsv(admin_base_path('member/import')));
-		});
+		if (Admin::user()->can('upload')) {
+			$grid->tools(function ($tools) {
+				$tools->append(new \App\Admin\Extensions\Tools\ImportCsv(admin_base_path('member/import')));
+			});
+		}
 		$grid->model()->orderBy('created_at','DESC');
 		
 		$grid->column('account', '会员帐号');
@@ -320,9 +322,9 @@ class MemberController extends Controller
 		
 		$form->currency('total_pay', '总出款金额')->symbol('CNY');
 		
-		$form->datetime('registration_date', '注册日期')->format('YYYY/MM/DD HH:mm');
+		$form->datetime('registration_date', '注册日期');
 		
-		$form->datetime('last_login', '最后登录日')->format('YYYY/MM/DD HH:mm');
+		$form->datetime('last_login', '最后登录日');
 		
 		$form->number('offline_days', '多久没登录')->default('0')->min('0');
 
