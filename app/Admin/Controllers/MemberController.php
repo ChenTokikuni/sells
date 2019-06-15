@@ -14,6 +14,9 @@ use Encore\Admin\Facades\Admin;		//用戶判斷
 use Illuminate\Support\Facades\DB;	//sql語法判斷
 
 use App\Admin\Extensions\PostsExporter;	//laravel-excel
+use App\Imports\UsersImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class MemberController extends Controller
 {
@@ -123,50 +126,50 @@ class MemberController extends Controller
 						
 				});
 					
-				$filter->group('pay_count', '出款次数', function ($group) {
+				$filter->group('pay_count', '出款次数', function ($group1) {
 						
-						$group->equal('等于');
-						$group->notEqual('不等于');
-						$group->gt('大于');
-						$group->lt('小于');
-						$group->nlt('大于等于');
-						$group->ngt('小于等于');
-						
-						
-				});
-				
-				$filter->group('total_save', '总存款金额', function ($group) {
-						
-						$group->equal('等于');
-						$group->notEqual('不等于');
-						$group->gt('大于');
-						$group->lt('小于');
-						$group->nlt('大于等于');
-						$group->ngt('小于等于');
+						$group1->equal('等于');
+						$group1->notEqual('不等于');
+						$group1->gt('大于');
+						$group1->lt('小于');
+						$group1->nlt('大于等于');
+						$group1->ngt('小于等于');
 						
 						
 				});
 				
-				$filter->group('total_pay', '总出款金额', function ($group) {
+				$filter->group('total_save', '总存款金额', function ($group2) {
 						
-						$group->equal('等于');
-						$group->notEqual('不等于');
-						$group->gt('大于');
-						$group->lt('小于');
-						$group->nlt('大于等于');
-						$group->ngt('小于等于');
+						$group2->equal('等于');
+						$group2->notEqual('不等于');
+						$group2->gt('大于');
+						$group2->lt('小于');
+						$group2->nlt('大于等于');
+						$group2->ngt('小于等于');
 						
 						
 				});
 				
-				$filter->group('offline_days', '多久没登录', function ($group) {
+				$filter->group('total_pay', '总出款金额', function ($group3) {
 						
-						$group->equal('等于');
-						$group->notEqual('不等于');
-						$group->gt('大于');
-						$group->lt('小于');
-						$group->nlt('大于等于');
-						$group->ngt('小于等于');
+						$group3->equal('等于');
+						$group3->notEqual('不等于');
+						$group3->gt('大于');
+						$group3->lt('小于');
+						$group3->nlt('大于等于');
+						$group3->ngt('小于等于');
+						
+						
+				});
+				
+				$filter->group('offline_days', '多久没登录', function ($group4) {
+						
+						$group4->equal('等于');
+						$group4->notEqual('不等于');
+						$group4->gt('大于');
+						$group4->lt('小于');
+						$group4->nlt('大于等于');
+						$group4->ngt('小于等于');
 						
 						
 				});
@@ -208,7 +211,7 @@ class MemberController extends Controller
 				$tools->append(new \App\Admin\Extensions\Tools\ImportCsv(admin_base_path('member/import')));
 			});
 		}
-		$grid->model()->orderBy('created_at','DESC');
+		$grid->model()->orderBy('id','ASC');
 		
 		$grid->column('account', '会员帐号');
 		
@@ -222,33 +225,33 @@ class MemberController extends Controller
 		
 		$grid->column('bank_number', '银行帐号');
 		
-		$grid->column('save_count', '存款次数')->display(function() {
+		$grid->column('save_count', '存款次数')->display(function($save_count) {
 			
-			return $this->pay_count.'次';
+			return $save_count.'次';
 		});
 		
-		$grid->column('pay_count', '出款次数')->display(function() {
+		$grid->column('pay_count', '出款次数')->display(function($pay_count) {
 			
-			return $this->pay_count.'次';
+			return $pay_count.'次';
 		});
 		
-		$grid->column('total_save', '总存款金额')->display(function() {
+		$grid->column('total_save', '总存款金额')->display(function($total_save) {
 			
-			return $this->total_save.'元';
+			return $total_save.'元';
 		});
 		
-		$grid->column('total_pay', '总出款金额')->display(function() {
+		$grid->column('total_pay', '总出款金额')->display(function($total_pay) {
 			
-			return $this->total_pay.'元';
+			return $total_pay.'元';
 		});
 		
 		$grid->column('registration_date', '注册日期');
 		
 		$grid->column('last_login', '最后登录日');
 		
-		$grid->column('offline_days', '多久没登录')->display(function() {
+		$grid->column('offline_days', '多久没登录')->display(function($offline_days) {
 			
-			return $this->offline_days.'天';
+			return $offline_days.'天';
 		});
 		
         return $grid;
@@ -339,7 +342,7 @@ class MemberController extends Controller
 
 		$rows = \App\Model\member::all();
 		foreach ($rows as $row) {
-			$options[$row->id] = $row->account;
+			$options[$row->account] = $row->account;
 		}
 		return $options;
 	}
@@ -349,14 +352,45 @@ class MemberController extends Controller
 
 		$rows = \App\Model\member::all();
 		foreach ($rows as $row) {
-			$options[$row->id] = $row->name;
+			$options[$row->name] = $row->name;
 		}
+		//print_r($options);exit;
 		return $options;
 	}
 	
 		// CSV 資料匯入
 	public function import(\Illuminate\Http\Request $request)
 	{
+		try{
+			$input_name = 'csv_file';
+			if (! $request->hasFile($input_name)) {
+				throw new \Exception('没有档案.');
+			}
+
+			$file = $request->file($input_name);
+			$file_path = $file->path();
+
+			$handle = fopen($file_path, 'r');
+			if ($handle === false) {
+				throw new \Exception('档案开启失败.');
+			}
+
+			$test = Excel::import(new UsersImport, $file_path);
+			
+			
+			// Response
+			$res['error'] = '000';
+		} catch (\Exception $e) {
+			$res['error'] = $e->getCode();
+			$res['msg'] = $e->getMessage();
+		} finally {
+			if (isset($handle)) {
+				fclose($handle);
+			}
+		}
+
+		return response()->json($res);
+		/*
 		$res = ['error' => '', 'msg' => ''];
 
 		try {
@@ -407,7 +441,7 @@ class MemberController extends Controller
 			}
 		}
 
-		return response()->json($res);
+		return response()->json($res);*/
 	}
 
 	protected function getCsvContents(&$handle, $limit = 500)

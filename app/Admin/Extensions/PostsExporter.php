@@ -6,7 +6,7 @@ use Encore\Admin\Grid\Exporters\ExcelExporter;
 
 class PostsExporter extends ExcelExporter
 {
-    protected $fileName = '会员列表.csv';
+    protected $fileName = '会员列表.xlsx';
 
     protected $columns = [
         'account'     	 => '会员帐号',
