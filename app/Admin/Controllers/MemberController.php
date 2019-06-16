@@ -361,6 +361,7 @@ class MemberController extends Controller
 		// CSV 資料匯入
 	public function import(\Illuminate\Http\Request $request)
 	{
+		/*xlsx導入
 		try{
 			$input_name = 'csv_file';
 			if (! $request->hasFile($input_name)) {
@@ -390,7 +391,8 @@ class MemberController extends Controller
 		}
 
 		return response()->json($res);
-		/*
+		*/
+		
 		$res = ['error' => '', 'msg' => ''];
 
 		try {
@@ -441,7 +443,7 @@ class MemberController extends Controller
 			}
 		}
 
-		return response()->json($res);*/
+		return response()->json($res);
 	}
 
 	protected function getCsvContents(&$handle, $limit = 500)

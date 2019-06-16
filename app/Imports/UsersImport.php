@@ -15,7 +15,6 @@ class UsersImport implements ToModel
      */
     public function model(array $member_data)
     {
-		print_r($member_data);exit;
         return new Member([
 		'account'     	 => $member_data[0],
 		'name'     		 => $member_data[1],
