@@ -209,7 +209,7 @@ class UserController extends Controller
 		
 		$form->table('ip','IP白名单', function ($table) {
 			$table->text('ip','');
-		})->required();
+		});
 		/**/
 		/*
         $form->display('created_at', trans('admin.created_at'));
