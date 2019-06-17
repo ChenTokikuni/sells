@@ -26,7 +26,7 @@
 
     <!-- /.box-header -->
     <div class="box-body table-responsive ">
-        <table class="table table-hover" id="{{ $grid->tableID }}">
+        <table class="table table-hover table-bordered" id="{{ $grid->tableID }}">
             <thead>
                 <tr>
                     @foreach($grid->visibleColumns() as $column)
