@@ -201,15 +201,15 @@ class UserController extends Controller
 
         $form->ignore(['password_confirmation']);
 
-        $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'));
+        $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'))->required();
 		/**/
         //$form->multipleSelect('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));	//額外權限
 
 		//ip限制
 		
-		$form->table('ip','ip限制', function ($table) {
+		$form->table('ip','IP白名单', function ($table) {
 			$table->text('ip','');
-		});
+		})->required();
 		/**/
 		/*
         $form->display('created_at', trans('admin.created_at'));
